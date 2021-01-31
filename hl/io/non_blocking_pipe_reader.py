@@ -29,11 +29,11 @@ class NonBlockingPipeReader(object):
             return b''
 
         if size == MAXSIZE:
-            size = available.value + 1
+            size = available.value
 
         buffer = ctypes.create_string_buffer(size)
         bytes_read = ctypes.wintypes.DWORD()
-        success = _kernel32.ReadFile(self.__handle, buffer, size - 1, ctypes.byref(bytes_read), None)
+        success = _kernel32.ReadFile(self.__handle, buffer, size, ctypes.byref(bytes_read), None)
         if not success:
             return b''
 
