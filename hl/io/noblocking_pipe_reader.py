@@ -4,8 +4,6 @@ from typing import *
 from six import MAXSIZE
 from six.moves import *
 
-import sys
-import os
 import subprocess
 import ctypes
 import ctypes.wintypes
