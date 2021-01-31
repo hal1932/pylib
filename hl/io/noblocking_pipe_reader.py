@@ -15,7 +15,7 @@ import msvcrt
 _kernel32 = ctypes.windll.kernel32
 
 
-class NonblockingPipeReader(object):
+class NonBlockingPipeReader(object):
 
     def __init__(self, pipe):
         # type: (IO) -> None
@@ -93,8 +93,8 @@ for i in range(10000):
 
     proc = subprocess.Popen(COMMAND, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    stdout = NonblockingPipeReader(proc.stdout)
-    stderr = NonblockingPipeReader(proc.stderr)
+    stdout = NonBlockingPipeReader(proc.stdout)
+    stderr = NonBlockingPipeReader(proc.stderr)
 
     outputs = []
     errors = []
