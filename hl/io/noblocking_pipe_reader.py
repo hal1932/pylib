@@ -28,7 +28,7 @@ class NonblockingPipeReader(object):
         available = ctypes.wintypes.DWORD()
         readable = _kernel32.PeekNamedPipe(self.__handle, None, 0, None, ctypes.byref(available), None)
         if not readable or available.value == 0:
-            return ''
+            return b''
 
         if size == MAXSIZE:
             size = available.value + 1
@@ -37,16 +37,22 @@ class NonblockingPipeReader(object):
         bytes_read = ctypes.wintypes.DWORD()
         success = _kernel32.ReadFile(self.__handle, buffer, size - 1, ctypes.byref(bytes_read), None)
         if not success:
-            return ''
+            return b''
 
         return buffer.value
 
-    def readline(self):
-        # type: () -> str
+    def readline(self, encoding=None):
+        # type: (Optional[str]) -> str
         if self.__stocked_lines:
             line = self.__stocked_lines.pop(0)
         else:
-            buffer = self.read().decode()
+            buffer = self.read()
+
+            if encoding is None:
+                buffer = buffer.decode()
+            else:
+                buffer = buffer.decode(encoding)
+
             if len(buffer) == 0:
                 return ''
 
@@ -115,6 +121,6 @@ for i in range(10000):
     print(len(outputs))
 
     for got, expected in zip(outputs, comm_outputs.splitlines()):
-        assert got == expected
+        assert got == expected.decode()
     for got, expected in zip(errors, comm_errors.splitlines()):
-        assert got == expected
+        assert got == expected.decode()
